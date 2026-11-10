@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /outils/
+Disallow: /CLAUDE.md
+
+Sitemap: https://paradisepatrimoine.github.io/sitemap.xml
