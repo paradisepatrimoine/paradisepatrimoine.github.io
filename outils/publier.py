@@ -239,9 +239,10 @@ def listing_page(l, others, updated, repo):
             body.append("<h2>%s</h2>" % E(g_title))
         if items:
             body.append('<ul class="pts">%s</ul>' % "".join("<li>%s</li>" % E(x) for x in items))
-    vf = l.get("videoFile")
-    if isinstance(vf, str) and re.fullmatch(r"videos/[A-Za-z0-9][A-Za-z0-9._-]*", vf):
-        body.append("<h2>Vidéo du bien</h2>")
+    vids = [vf for vf in (l.get("videoFile"), l.get("videoFile2")) if isinstance(vf, str) and re.fullmatch(r"videos/[A-Za-z0-9][A-Za-z0-9._-]*", vf)]
+    if vids:
+        body.append("<h2>%s</h2>" % ("Vidéos du bien" if len(vids) > 1 else "Vidéo du bien"))
+    for vf in vids:
         body.append('<video controls preload="none" playsinline%s><source src="/%s" type="video/mp4"></video>' % (' poster="/%s"' % E(photos[0]) if photos and not photos[0].startswith("http") else "", E(vf)))
     if len(photos) > 1:
         body.append('<div class="gal">%s</div>' % "".join('<img src="%s" alt="%s" loading="lazy"%s>' % (E("/" + p if not p.startswith("http") else p), E(title + " – photo " + str(i + 2)), img_size(repo, p)) for i, p in enumerate(photos[1:])))
@@ -388,8 +389,9 @@ def main():
     used = set()
     for l in all_listings:
         used.update(photos_of(l))
-        if isinstance(l.get("videoFile"), str):
-            used.add(re.sub(r"^\.?/", "", l["videoFile"]))
+        for k in ("videoFile", "videoFile2"):
+            if isinstance(l.get(k), str):
+                used.add(re.sub(r"^\.?/", "", l[k]))
     fees = (data.get("legal") or {}).get("feesPdf")
     if isinstance(fees, str):
         used.add(fees)
