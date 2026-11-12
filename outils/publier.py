@@ -281,6 +281,7 @@ def listing_page(l, others, updated, repo):
         '<meta name="robots" content="index,follow,max-image-preview:large">',
         '<link rel="canonical" href="%s">' % E(url),
         '<meta name="theme-color" content="#07111E">',
+        '<script src="/mesure.js" data-annonce="%s"></script>' % E(lid),
         '<meta property="og:type" content="article">',
         '<meta property="og:site_name" content="%s">' % E(BRAND),
         '<meta property="og:locale" content="fr_FR">',
@@ -427,7 +428,7 @@ def main():
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
         "".join("  <url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>\n" % (E(u), updated, pr) for u, pr in urls) +
         "</urlset>\n", encoding="utf-8")
-    (repo / "robots.txt").write_text("User-agent: *\nAllow: /\nDisallow: /outils/\nDisallow: /CLAUDE.md\n\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
+    (repo / "robots.txt").write_text("User-agent: *\nAllow: /\nDisallow: /outils/\nDisallow: /stats/\nDisallow: /CLAUDE.md\n\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
 
     print("index.html : %d Ko%s" % (size // 1024, "" if size <= MAX_HTML else "  <-- TROP LOURD pour Google (limite 2 Mo)"))
     print("photos : %d écrites, %d supprimées, %d restées dans la page" % (written, removed, len(inline)))

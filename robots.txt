@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /outils/
+Disallow: /stats/
 Disallow: /CLAUDE.md
 
 Sitemap: https://paradisepatrimoine.github.io/sitemap.xml

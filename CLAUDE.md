@@ -30,9 +30,22 @@ directement dans la page, sinon la modification disparaît à la publication sui
     # … modifier modele.html …
     python3 outils/modele.py appliquer modele.html && python3 outils/publier.py
 
+## Statistiques de visite
+
+Le propriétaire les consulte dans l'espace privé, bouton « 📊 Statistiques » (visites par jour/mois, provenance,
+annonces les plus consultées, liens `?src=` à mettre dans ses réseaux). Aucun compte ni cookie :
+
+- `mesure.js` (chargé par `index.html` via le modèle, et par chaque `annonces/<id>/` via `publier.py`) compte une
+  visite par session et sa provenance, et chaque annonce consultée, dans le compteur public
+  abacus.jasoncameron.dev (espace `paradisepatrimoine-gh`, clés `AAAAMMJJ-v`, `-s-<source>`, `-a-<id>`).
+  Les visites du propriétaire ne sont pas comptées (`localStorage.pp_nostats`, posé à l'ouverture de l'espace privé).
+- `outils/statistiques.py`, lancé chaque nuit par `.github/workflows/statistiques.yml`, recopie les compteurs
+  (qui expirent au bout de 6 mois) dans `stats/historique.json`. Ne pas modifier ce fichier à la main.
+- La page « Confidentialité » du site décrit cette mesure : la garder à jour si elle change.
+
 ## À ne pas faire
 
-- Ne pas modifier à la main `annonces/`, `photos/`, `files/`, `sitemap.xml`, `robots.txt` ni les balises
+- Ne pas modifier à la main `annonces/`, `photos/`, `files/`, `stats/`, `sitemap.xml`, `robots.txt` ni les balises
   ajoutées dans l'en-tête de `index.html` : tout est régénéré par le script.
 - Ne pas afficher de téléphone ni d'e-mail dans les pages générées (le lien de la bio TikTok doit rester sans coordonnées).
 - Garder le fichier `.nojekyll`.

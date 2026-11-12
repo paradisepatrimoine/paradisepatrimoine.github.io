@@ -1,0 +1,27 @@
+# Relevé des statistiques de visite, chaque nuit (vers 2 h 20 en hiver, 3 h 20 en été, heure de Paris).
+# Voir outils/statistiques.py. Lancement à la main : onglet Actions > « Statistiques de visite » > Run workflow.
+name: Statistiques de visite
+on:
+  schedule:
+    - cron: "21 1 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: statistiques
+jobs:
+  releve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Relevé des compteurs
+        run: python3 outils/statistiques.py
+      - name: Enregistrement dans le dépôt
+        run: |
+          git config user.name "Statistiques Paradise Patrimoine"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats/historique.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Statistiques de visite : relevé du $(TZ=Europe/Paris date +%d/%m/%Y)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && exit 0; sleep 10; done
+          exit 1
